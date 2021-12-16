@@ -2,6 +2,8 @@ const express = require("express");
 const os = require("os");
 const cors = require("cors");
 const app = express();
+const pkg = require('getmac').default
+const ismac=  require("getmac")
 const address = require("address");
 app.use(cors());
 const RequestIp = require("@supercharge/request-ip");
@@ -16,6 +18,7 @@ app.get("/getInfo", (req, res) => {
      req.connection.remoteAddress || 
      req.socket.remoteAddress ||
      req.connection.socket.remoteAddress;
+    
   // '192.168.0.2'
   // 'fe80::7aca:39ff:feb0:e67d'
   let mac = null;
@@ -25,13 +28,14 @@ app.get("/getInfo", (req, res) => {
   });
 
   // local loopback
-  console.log(address.ip("lo")); // '127.0.0.1'
+  console.log(os.networkInterfaces()); // '127.0.0.1'
 
   // vboxnet MAC
   address.mac("vboxnet", function (err, addr) {
     mac1 = addr; // '0a:00:27:00:00:00'
   });
   res.send({
+    macaddress:pkg(),
     newip:ip,
     ip: req.ip,
     addressnpm: {
