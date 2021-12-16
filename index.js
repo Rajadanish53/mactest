@@ -4,8 +4,13 @@ const cors = require("cors");
 const app = express();
 const address = require("address");
 app.use(cors());
+const RequestIp = require("@supercharge/request-ip");
 let PORT = process.env.PORT || 2000;
+const expressMiddleware = function (req, res, next) {
+  req.ip = RequestIp.getClientIp(req);
 
+  next();
+};
 app.get("/getInfo", (req, res) => {
   console.log();
   console.log();
@@ -25,6 +30,7 @@ app.get("/getInfo", (req, res) => {
     mac1 = addr; // '0a:00:27:00:00:00'
   });
   res.send({
+    ip: req.ip,
     addressnpm: {
       ip: address.ip(),
       IPv6: address.ipv6(),
@@ -36,6 +42,7 @@ app.get("/getInfo", (req, res) => {
     localaddress: req.socket.localAddress,
     localPort: req.socket.localPort,
     family: req.socket.remoteFamily,
+    remoteaDDRESS: req.socket.remoteAddress,
   });
   // res.send("done");
 
