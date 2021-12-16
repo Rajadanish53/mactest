@@ -12,8 +12,10 @@ const expressMiddleware = function (req, res, next) {
   next();
 };
 app.get("/getInfo", (req, res) => {
-  console.log();
-  console.log();
+  var ip = req.headers['x-forwarded-for'] || 
+     req.connection.remoteAddress || 
+     req.socket.remoteAddress ||
+     req.connection.socket.remoteAddress;
   // '192.168.0.2'
   // 'fe80::7aca:39ff:feb0:e67d'
   let mac = null;
@@ -30,6 +32,7 @@ app.get("/getInfo", (req, res) => {
     mac1 = addr; // '0a:00:27:00:00:00'
   });
   res.send({
+    newip:ip,
     ip: req.ip,
     addressnpm: {
       ip: address.ip(),
